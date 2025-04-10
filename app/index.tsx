@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useFonts } from "expo-font";
 import {
   Button,
   Image,
@@ -25,7 +26,6 @@ export default function SplashScreen() {
   const scale = useSharedValue(1);
 
   useEffect(() => {
-    rotation.value = withRepeat(withTiming(360, { duration: 3000 }), -1, false);
 
     scale.value = withRepeat(
       withSequence(
@@ -51,6 +51,13 @@ export default function SplashScreen() {
 
   const { isDark, toggleTheme, colors } = useTheme();
 
+  const [fontsLoaded] = useFonts({
+    "Montserrat": require("@/assets/fonts/Montserrat-VariableFont_wght.ttf"),
+    "InknutAntiqua-Regular": require("@/assets/fonts/InknutAntiqua-Regular.ttf"),
+    "Montserrat-Bold": require("@/assets/fonts/Montserrat-Bold.ttf"),
+    "Montserrat-Regular": require("@/assets/fonts/Montserrat-Regular.ttf"),
+  });
+
   return (
     // <LinearGradient
     //   colors={["#88b4bd","#b1dbbc", "#add8d5", "#dff2eb"]}
@@ -58,7 +65,7 @@ export default function SplashScreen() {
     //   start={{ x: 0, y: 0 }}
     //   end={{ x: 1, y: 1 }}
     // >
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       {/* <View style={styles.header}>
         <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
           {isDark ? (
@@ -70,16 +77,16 @@ export default function SplashScreen() {
       </View> */}
       <Animated.View style={[styles.logoContainer, animatedStyle]}>
         <View style={styles.logo}>
-          
+          <Image source={require("@/assets/images/logo.png")} style={{width: 60, height: 60, justifyContent: "center", alignItems: "center"}} />
         </View>
       </Animated.View>
       <View>
-        <Text style={[styles.title, { color: colors.text }]}>Welcome to LETME</Text>
-        <View style={{ height: 200, width: "100%", alignContent: "center", alignItems: "center", justifyContent: "center" }}>
-          <Image source={require('@/assets/images/logo.png')} style={{ width: 300, height: 200, resizeMode: "contain" }} />
+        <Text style={styles.title}>Welcome to LETME</Text>
+        <View style={{ height: 300, width: "100%", alignContent: "center", alignItems: "center", justifyContent: "center" }}>
+          <Image source={require('@/assets/images/splash_image.png')} style={{ width: 330, height: 500, resizeMode: "contain" }} />
         </View>
-        <Text style={[styles.subtitle, { color: colors.text }]}>
-          Let's take control {"\n"} your mental health with us{" "}
+        <Text style={styles.subtitle}>
+          Let's take control your {"\n"} mental health with us{" "}
         </Text>
       </View>
       <TouchableOpacity
@@ -97,30 +104,30 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "rgb(193, 226, 179)",
   },
   title: {
-    fontFamily: "Poppins-SemiBold",
+    fontFamily: "Montserrat-Bold",
     fontSize: 32,
     marginBottom: 16,
     textAlign: "center",
-    fontWeight: "bold",
-    color: 'rgb(121, 34, 34)',
+    color: 'rgb(114, 169, 158)',
   },
   subtitle: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 24,
-    fontWeight: "300",
-    color: 'rgb(29, 111, 103)',
+    fontFamily: "Montserrat-Regular",
+    fontSize: 20,
+    color: 'rgb(36, 122, 99)',
     textAlign: "center",
   },
   buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontFamily: "Poppins-SemiBold",
+    color: "rgb(252,251,184)",
+    fontSize: 18,
+    fontFamily: "Montserrat-Bold",
   },
   logoContainer: {
     width: 80,
     height: 80,
+    margin: 20,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -138,10 +145,18 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 16,
-    backgroundColor: "#b1dbbc",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    marginTop: 40,
+    backgroundColor: "rgb(193, 213, 151)",
+    paddingVertical: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: "85%",
   },
   iconButton: {
     padding: 8,
