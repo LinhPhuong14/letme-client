@@ -31,14 +31,13 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://i.pinimg.com/736x/54/be/81/54be8138a55576df3c199707d89c4453.jpg",
-      }}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.overlay} />
+    <View style={styles.container}>
+      <View style={styles.banner}>
+        <Image
+          source={require("@/assets/images/login.png")}
+          style={styles.bannerImage}
+        />
+      </View>
       <View style={styles.formContainer}>
         <Text style={styles.title}>Welcome back!</Text>
 
@@ -64,13 +63,13 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.rememberContainer}>
+          <Text style={styles.rememberText}>Remember me</Text>
           <Checkbox
             value={isChecked}
             onValueChange={setIsChecked}
             style={styles.checkbox}
             color={isChecked ? "#000" : undefined}
           />
-          <Text style={styles.rememberText}>Remember me</Text>
         </View>
         <View style={styles.registerContainer}>
           <Text style={styles.registerText}>Don't have an account? </Text>
@@ -97,84 +96,86 @@ export default function LoginScreen() {
           />
         </View>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: "flex-end",
+  container: {
+    backgroundColor: "rgb(193, 226, 179)",
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(166, 252, 177, 0.32)", // overlay mờ nếu muốn
+  banner: {
+    height: 400,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    overflow: "hidden",
+  },
+  bannerImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   formContainer: {
     backgroundColor: "rgb(193, 226, 179)",
-    padding: 24,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 6,
+    padding: 16,
   },
   title: {
     fontFamily: "Montserrat-Bold",
     fontSize: 30,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
     color: "#70A6AB",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.23)",
+    backgroundColor: "rgba(255, 255, 255, 0.13)",
     borderRadius: 30,
     marginBottom: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 10,
+    padding: 4,
     borderWidth: 1,
-    borderColor: "#d6d6d6",
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   input: {
     flex: 1,
     marginLeft: 10,
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
-    color: "#B2D5B7",
+    color:"rgb(155, 222, 164)",
     textAlign: "center",
   },
   rememberContainer: {
     marginBottom: 16,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
   },
   rememberText: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: "Montserrat-Bold",
     fontSize: 14,
-    color: "#666",
-    marginLeft: 10,
+    color: "#47684D",
+    marginRight: 10,
   },
   checkbox: {
     width: 18,
     height: 18,
     borderRadius: 4,
-    borderWidth: 2,
-    borderColor: "#88b4bd",
+    borderWidth: 3,
+    borderColor: "#47684D",
   },
   loginButton: {
     backgroundColor: "rgb(190, 214, 142)",
-    padding: 8,
+    padding: 4,
     borderRadius: 30,
     alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
     marginBottom: 16,
+    width: "90%"
   },
   loginButtonText: {
     color: "#FCFFDA",
-    fontSize: 30,
+    fontSize: 28,
     fontFamily: "Montserrat-Bold",
   },
   socialContainer: {
@@ -185,18 +186,19 @@ const styles = StyleSheet.create({
   socialIcon: {
     width: 32,
     height: 32,
-    marginHorizontal: 8,
+    marginHorizontal: 20,
   },
   registerContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 10,
   },
   registerText: {
     fontFamily: "Montserrat-Regular",
-    color: "#666",
+    color: "#475535",
   },
   registerLink: {
-    fontFamily: "Inter-SemiBold",
-    color: "#88b4bd",
+    fontFamily: "Montserrat-Bold",
+    color: "#708951",
   },
 });
