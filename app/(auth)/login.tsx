@@ -11,12 +11,21 @@ import {
 import { Link, router } from "expo-router";
 import { Mail, Lock } from "lucide-react-native";
 import Checkbox from "expo-checkbox";
+import { useFonts } from "expo-font";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
+  const [loaded] = useFonts({
+    "Montserrat-Bold": require("../../assets/fonts/Montserrat-Bold.ttf"),
+    "Montserrat-Regular": require("../../assets/fonts/Montserrat-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
   const handleLogin = () => {
     router.replace("/(tabs)");
   };
@@ -34,7 +43,6 @@ export default function LoginScreen() {
         <Text style={styles.title}>Welcome back!</Text>
 
         <View style={styles.inputContainer}>
-          <Mail size={20} color="#3c707b" />
           <TextInput
             style={styles.input}
             placeholder="Email address"
@@ -46,7 +54,6 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Lock size={20} color="#3c707b" />
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -65,9 +72,14 @@ export default function LoginScreen() {
           />
           <Text style={styles.rememberText}>Remember me</Text>
         </View>
-
+        <View style={styles.registerContainer}>
+          <Text style={styles.registerText}>Don't have an account? </Text>
+          <Link href="/register" style={styles.registerLink}>
+            Sign Up
+          </Link>
+        </View>
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Log In</Text>
+          <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
         <View style={styles.socialContainer}>
@@ -84,13 +96,6 @@ export default function LoginScreen() {
             style={styles.socialIcon}
           />
         </View>
-
-        <View style={styles.registerContainer}>
-          <Text style={styles.registerText}>Don't have an account? </Text>
-          <Link href="/register" style={styles.registerLink}>
-            Sign Up
-          </Link>
-        </View>
       </View>
     </ImageBackground>
   );
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(166, 252, 177, 0.32)", // overlay mờ nếu muốn
   },
   formContainer: {
-    backgroundColor: "#dff2eb",
+    backgroundColor: "rgb(193, 226, 179)",
     padding: 24,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -117,20 +122,19 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   title: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 24,
-    marginBottom: 24,
+    fontFamily: "Montserrat-Bold",
+    fontSize: 30,
+    marginBottom: 20,
     textAlign: "center",
-    color: "#3c707b",
-    fontWeight: "bold",
+    color: "#70A6AB",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.23)",
     borderRadius: 30,
-    marginBottom: 16,
-    paddingHorizontal: 12,
+    marginBottom: 10,
+    paddingHorizontal: 8,
     paddingVertical: 10,
     borderWidth: 1,
     borderColor: "#d6d6d6",
@@ -138,8 +142,10 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginLeft: 10,
-    fontFamily: "Inter-Regular",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
+    color: "#B2D5B7",
+    textAlign: "center",
   },
   rememberContainer: {
     marginBottom: 16,
@@ -147,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   rememberText: {
-    fontFamily: "Inter-Regular",
+    fontFamily: "Montserrat-Regular",
     fontSize: 14,
     color: "#666",
     marginLeft: 10,
@@ -160,16 +166,16 @@ const styles = StyleSheet.create({
     borderColor: "#88b4bd",
   },
   loginButton: {
-    backgroundColor: "#b1dbbc",
-    padding: 13,
+    backgroundColor: "rgb(190, 214, 142)",
+    padding: 8,
     borderRadius: 30,
     alignItems: "center",
     marginBottom: 16,
   },
   loginButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontFamily: "Inter-SemiBold",
+    color: "#FCFFDA",
+    fontSize: 30,
+    fontFamily: "Montserrat-Bold",
   },
   socialContainer: {
     flexDirection: "row",
@@ -186,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   registerText: {
-    fontFamily: "Inter-Regular",
+    fontFamily: "Montserrat-Regular",
     color: "#666",
   },
   registerLink: {
