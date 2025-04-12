@@ -11,7 +11,7 @@ interface ThemeContextType {
 }
 
 const lightColors = {
-  background: '#ebfff8',
+  background: '#DAE9D4',
   card: '#ffffff',
   text: '#333333',
   subtext: '#666666',
@@ -23,7 +23,7 @@ const lightColors = {
 };
 
 const darkColors = {
-  background: '#121212',
+  background: '#DAE9D4',
   card: '#1e1e1e',
   text: '#ffffff',
   subtext: '#a0a0a0',

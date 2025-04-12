@@ -1,16 +1,14 @@
 import FeelDock from "@/components/home/howFeelCard";
 import { RecommendationCard } from "@/components/home/recommendCard";
 import { RemindCarousel } from "@/components/home/remindCard";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { useTheme } from "@/context/ThemeContext";
-import { Bell, Moon, Sun, Search } from "lucide-react-native";
+import { Bell } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Image,
   TextInput,
   SafeAreaView,
@@ -18,14 +16,16 @@ import {
   Dimensions,
   StatusBar,
 } from "react-native";
-const BANNER_HEIGHT = 220; // Max height of banner
-const HEADER_HEIGHT = 100; // Minimum height when collapsed
+import { useFonts } from "expo-font";
+
+const BANNER_HEIGHT = 220;
+const HEADER_HEIGHT = 100;
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
 const HomeScreen: React.FC = () => {
   const { colors, isDark, toggleTheme } = useTheme();
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  // Calculate animated values
   const headerHeight = scrollY.interpolate({
     inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
     outputRange: [BANNER_HEIGHT, HEADER_HEIGHT],
@@ -38,109 +38,77 @@ const HomeScreen: React.FC = () => {
     extrapolate: "clamp",
   });
 
-  const titleScale = scrollY.interpolate({
+  const sunScale = scrollY.interpolate({
     inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [1, 0.8],
+    outputRange: [1, 0.7],
     extrapolate: "clamp",
   });
 
-  const titleTranslateY = scrollY.interpolate({
+  const sunTranslateY = scrollY.interpolate({
     inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [0, -10],
+    outputRange: [0, -100],
     extrapolate: "clamp",
   });
 
-  
+  const [fontsLoaded] = useFonts({
+    "Montserrat-Bold": require("../../assets/fonts/Montserrat-Bold.ttf"),
+    "Montserrat-Regular": require("../../assets/fonts/Montserrat-Regular.ttf"),
+  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
-
-      {/* Collapsible Header */}
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       <Animated.View style={[styles.header, { height: headerHeight }]}>
         <Animated.Image
-          source={require("@/assets/images/home_banner.jpg")}
+          source={{
+            uri: "https://i.pinimg.com/736x/27/a7/d2/27a7d2836362067ada5e413de948a5b4.jpg",
+          }}
           style={[styles.bannerImage, { opacity: headerOpacity }]}
           resizeMode="cover"
         />
         <View style={styles.headerTopContent}>
-            <View style={styles.headerButtons}>
-              <TouchableOpacity style={styles.iconButton}>
-                <Bell size={24} color="#fff" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
-                {isDark ? (
-                  <Sun size={24} color="#fff" />
-                ) : (
-                  <Moon size={24} color="#fff" />
-                )}
-              </TouchableOpacity>
-            </View>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity style={styles.iconButton}>
+              <Bell size={24} color="#fff" />
+            </TouchableOpacity>
           </View>
-        {/* Header Content */}
+        </View>
         <View style={styles.headerContent}>
-          <Animated.Text
-            style={[
-              styles.welcomeText,
-              {
-                transform: [
-                  { scale: titleScale },
-                  { translateY: titleTranslateY },
-                ],
-              },
-            ]}
-          >
-            Hello, Username
-          </Animated.Text>
-
+          <Text style={styles.welcomeText}>Hello, Username</Text>
           <View style={styles.rightHeader}>
-            <Image
+            <Animated.Image
               source={require("@/assets/images/sun.png")}
-              style={styles.sunImage}
+              style={[
+                styles.sunImage,
+                {
+                  transform: [
+                    { scale: sunScale },
+                    { translateY: sunTranslateY },
+                  ],
+                },
+              ]}
             />
           </View>
         </View>
       </Animated.View>
 
-      {/* Main Content */}
+      {/* Scrollable Content */}
       <Animated.ScrollView
-        style={[styles.container, { backgroundColor: colors.background }]}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false }
         )}
-        contentContainerStyle={styles.contentContainer}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingTop: 0 }}
       >
-        {/* Search bar */}
-        {/* <View style={styles.searchContainer}>
-          <Search size={20} color="#666" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search camp site..."
-            placeholderTextColor="#666"
-          />
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterButtonText}>Filters</Text>
-          </TouchableOpacity>
-        </View> */}
-        <FeelDock />
-
-        <View style={styles.separator}>
-        {/* Recommendation */}
-        <RecommendationCard />
-
-        {/* Remind */}
-        <RemindCarousel />
+        <View style={styles.container}>
+          <FeelDock />
+          <View style={styles.separator}>
+            <RecommendationCard />
+            <RemindCarousel />
+          </View>
+          <View style={{ height: 100 }} />
         </View>
-
-        {/* Extra padding at bottom for better scrolling experience */}
-        <View style={{ height: 100 }} />
       </Animated.ScrollView>
     </SafeAreaView>
   );
@@ -151,22 +119,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9FAF5",
   },
-  contentContainer: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: -10,
-  },
-  headerTopContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
+  container: {
+    flex: 1,
+    backgroundColor: "#F9FAF5", // fix lại nền
   },
   separator: {
     paddingHorizontal: 16,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
   },
   header: {
     position: "relative",
@@ -179,18 +137,22 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    width: SCREEN_WIDTH,
   },
-  headerOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.3)",
+  headerTopContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingTop: StatusBar.currentHeight || 20,
     paddingHorizontal: 16,
-    paddingTop: StatusBar.currentHeight + 10,
-    justifyContent: "space-between",
+  },
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
+  iconButton: {
+    padding: 8,
+    marginLeft: 8,
+    alignSelf: "flex-end",
   },
   headerContent: {
     flexDirection: "row",
@@ -199,19 +161,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 10,
   },
-
-  rightHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-
-  sunImage: {
-    width: 150,
-    height: 150,
-    marginRight: 8,
-  },
-
   welcomeText: {
     fontSize: 24,
     fontWeight: "bold",
@@ -219,52 +168,19 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0,0,0,0.3)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
-    lineHeight: 28, // đảm bảo cân đối chiều cao chữ
-    paddingBottom: 4, // chỉnh nhẹ để khớp icon
+    lineHeight: 28,
+    paddingBottom: 4,
   },
-  headerButtons: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    paddingTop: 30,
-  },
-  iconButton: {
-    padding: 8,
-    marginLeft: 8,
-    alignSelf: "flex-end",
-  },
-  searchContainer: {
+  rightHeader: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    gap: 8,
   },
-  searchIcon: {
+  sunImage: {
+    width: 150,
+    height: 150,
     marginRight: 8,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-  },
-  filterButton: {
-    backgroundColor: "#E8F0E3",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  filterButtonText: {
-    color: "#4CAF50",
-    fontWeight: "600",
-  },
-  
 });
 
 export default HomeScreen;

@@ -1,3 +1,5 @@
+import { AnalysisCard } from "@/components/analysis/analysisCard";
+import { Judge } from "@/components/analysis/todayJudge";
 import { RecommendationCard } from "@/components/home/recommendCard";
 import { RemindCarousel } from "@/components/home/remindCard";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
@@ -16,6 +18,7 @@ import {
   Animated,
   Dimensions,
   StatusBar,
+  ImageBackground,
 } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 const BANNER_HEIGHT = 220; // Max height of banner
@@ -31,46 +34,60 @@ const HomeScreen: React.FC = () => {
         backgroundColor="transparent"
         translucent
       />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerOverlay}>
-          <View style={styles.headerTopContent}>
-            <View style={styles.headerButtons}>
-              <TouchableOpacity style={styles.iconButton}>
-                <Bell size={24} color="#fff" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
-                {isDark ? (
-                  <Sun size={24} color="#fff" />
-                ) : (
-                  <Moon size={24} color="#fff" />
-                )}
-              </TouchableOpacity>
+      <ImageBackground
+        source={{
+          uri: "https://i.pinimg.com/474x/95/55/7e/95557ef7298e0366622bd4b3675107bd.jpg",
+        }} // Đường dẫn ảnh nền
+        style={styles.background}
+        imageStyle={styles.imageStyle}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerOverlay}>
+            <View style={styles.headerTopContent}>
+              <View style={styles.headerButtons}>
+                <TouchableOpacity style={styles.iconButton}>
+                  <Bell size={24} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.iconButton}
+                  onPress={toggleTheme}
+                >
+                  {isDark ? (
+                    <Sun size={24} color="#fff" />
+                  ) : (
+                    <Moon size={24} color="#fff" />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={styles.progress}>
-        <AnimatedCircularProgress
-          size={150}
-          width={10}
-          fill={75} // phần trăm progress (0 - 100)
-          tintColor="#88b4bd"
-          backgroundColor="#E0E0E0"
-          rotation={0}
-          lineCap="round"
-        >
-          {(fill) => (
-            <Text style={styles.progressText}>{`${Math.round(fill)}%`}</Text>
-          )}
-        </AnimatedCircularProgress>
-      </View>
-
-      <View style={styles.card}>
+        <View style={styles.progress}>
+          <AnimatedCircularProgress
+            size={150}
+            width={10}
+            fill={75} // phần trăm progress (0 - 100)
+            tintColor="#6daebb"
+            backgroundColor="#fff"
+            rotation={0}
+            lineCap="round"
+          >
+            {(fill) => (
+              <Text style={styles.progressText}>{`${Math.round(fill)}%`}</Text>
+            )}
+          </AnimatedCircularProgress>
         </View>
 
-      {/* Main Content */}
+        <View style={styles.card}>
+          <Judge />
+        </View>
+        <View style={styles.bottom}>
+          <AnalysisCard />
+        </View>
+        <View style={{ height: 60 }}></View>
+        {/* Main Content */}
+      </ImageBackground>
     </SafeAreaView>
   );
 };
@@ -83,17 +100,25 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#4CAF50",
+    color: "#3b995a",
   },
   container: {
     flex: 1,
     backgroundColor: "#F9FAF5",
     paddingHorizontal: 16,
   },
-  card:{
-
+  card: {
+    paddingHorizontal: 16,
+    top: 70,
   },
 
+  bottom: {
+    top: 80,
+    bottom: 0,
+    height: 400,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
   header: {
     position: "relative",
     width: "100%",
@@ -104,7 +129,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 100,
     borderRadius: 100,
-    backgroundColor: "#d2e0fd",
+    backgroundColor: "rgb(212, 224, 245)",
     width: 150,
     height: 150,
     alignSelf: "center",

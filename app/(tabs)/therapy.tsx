@@ -3,7 +3,7 @@ import { RemindCarousel } from "@/components/home/remindCard";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { useTheme } from "@/context/ThemeContext";
 import { Bell, Moon, Sun, Search } from "lucide-react-native";
-import React, { useRef , useState} from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -23,31 +23,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const HomeScreen: React.FC = () => {
   const { colors, isDark, toggleTheme } = useTheme();
   const scrollY = useRef(new Animated.Value(0)).current;
-  
-  // Calculate animated values
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [BANNER_HEIGHT, HEADER_HEIGHT],
-    extrapolate: 'clamp'
-  });
-  
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT, BANNER_HEIGHT],
-    outputRange: [1, 0.8, 0],
-    extrapolate: 'clamp'
-  });
-  
-  const titleScale = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [1, 0.8],
-    extrapolate: 'clamp'
-  });
-  
-  const titleTranslateY = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [0, -10],
-    extrapolate: 'clamp'
-  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -57,28 +32,10 @@ const HomeScreen: React.FC = () => {
         translucent
       />
 
-      {/* Collapsible Header */}
-      <Animated.View style={[styles.header, { height: headerHeight }]}>
-        <Animated.Image
-          source={require("@/assets/images/home_banner.jpg")}
-          style={[styles.bannerImage, { opacity: headerOpacity }]}
-          resizeMode="cover"
-        />
+      {/* Header */}
+      <View style={styles.header}>
         <View style={styles.headerOverlay}>
           <View style={styles.headerTopContent}>
-            <Animated.Text
-              style={[
-                styles.welcomeText,
-                {
-                  transform: [
-                    { scale: titleScale },
-                    { translateY: titleTranslateY },
-                  ],
-                },
-              ]}
-            >
-              Hello, Username
-            </Animated.Text>
             <View style={styles.headerButtons}>
               <TouchableOpacity style={styles.iconButton}>
                 <Bell size={24} color="#fff" />
@@ -93,7 +50,7 @@ const HomeScreen: React.FC = () => {
             </View>
           </View>
         </View>
-      </Animated.View>
+      </View>
 
       {/* Main Content */}
       <Animated.ScrollView
@@ -169,47 +126,6 @@ const HomeScreen: React.FC = () => {
           </ScrollView>
         </View>
 
-        {/* Recommended */}
-        <View style={styles.recommendedSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recommended</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>See all</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.recommendedCard}>
-            <Image
-              source={require("@/assets/images/home_banner.jpg")}
-              style={styles.recommendedImage}
-              resizeMode="cover"
-            />
-            <View style={styles.recommendedCardContent}>
-              <Text style={styles.recommendedTitle}>Forest Retreat</Text>
-              <Text style={styles.recommendedLocation}>Portland, Oregon</Text>
-              <View style={styles.recommendedFooter}>
-                <Text style={styles.ratingText}>4.9 ⭐</Text>
-                <Text style={styles.priceText}>$45/night</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.recommendedCard}>
-            <Image
-              source={require("@/assets/images/home_banner.jpg")}
-              style={styles.recommendedImage}
-              resizeMode="cover"
-            />
-            <View style={styles.recommendedCardContent}>
-              <Text style={styles.recommendedTitle}>River Camp</Text>
-              <Text style={styles.recommendedLocation}>Montana</Text>
-              <View style={styles.recommendedFooter}>
-                <Text style={styles.ratingText}>4.6 ⭐</Text>
-                <Text style={styles.priceText}>$38/night</Text>
-              </View>
-            </View>
-          </View>
-        </View>
 
         {/* Extra padding at bottom for better scrolling experience */}
         <View style={{ height: 50 }} />
@@ -221,25 +137,18 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F9FAF5",
+    backgroundColor: "rgb(214, 240, 231)",
   },
   container: {
     flex: 1,
-    backgroundColor: "#F9FAF5",
+    backgroundColor: "#dff2eb",
     paddingHorizontal: 16,
   },
   header: {
     position: "relative",
     width: "100%",
-    overflow: "hidden",
-  },
-  bannerImage: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: SCREEN_WIDTH,
+    backgroundColor: "#dff2eb",
+    height: 80,
   },
   headerOverlay: {
     position: "absolute",
@@ -247,15 +156,20 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor:"#dff2eb",
     paddingHorizontal: 16,
     paddingTop: StatusBar.currentHeight + 10,
     justifyContent: "space-between",
   },
   headerTopContent: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
   welcomeText: {
     fontSize: 28,
@@ -265,10 +179,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
-  headerButtons: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  
   iconButton: {
     padding: 8,
     marginLeft: 8,
@@ -394,47 +305,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#FF8C00",
   },
-  recommendedSection: {
-    marginBottom: 24,
-  },
-  recommendedCard: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    overflow: "hidden",
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  recommendedImage: {
-    width: "100%",
-    height: 180,
-  },
-  recommendedCardContent: {
-    padding: 16,
-  },
-  recommendedTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  recommendedLocation: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  recommendedFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  priceText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#4CAF50",
-  },
+
 });
 
 export default HomeScreen;

@@ -14,7 +14,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarStyle: {
           height: 0, // để background custom đảm nhận việc hiển thị
-          backgroundColor: "#88b4bd",
+          backgroundColor: "transparent",
           elevation: 0,
           borderTopWidth: 0,
           position: "absolute",
@@ -77,11 +77,11 @@ export default function TabLayout() {
         </TabBarBackground>
       )}
     >
-      <Tabs.Screen name="index" />
+      {/* <Tabs.Screen name="index" />
       <Tabs.Screen name="analysis" />
       <Tabs.Screen name="therapy" />
       <Tabs.Screen name="reports" />
-      <Tabs.Screen name="profile" />
+      <Tabs.Screen name="profile" /> */}
     </Tabs>
   )
 }
