@@ -1,0 +1,12 @@
+praat-parselmouth
+transformers
+matplotlib
+opencv-python
+requests
+pandas
+numpy
+sounddevice
+pydub
+mediapipe
+moviepy
+ffmpeg-python
