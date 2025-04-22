@@ -1,440 +1,193 @@
-import { RecommendationCard } from "@/components/home/recommendCard";
-import { RemindCarousel } from "@/components/home/remindCard";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Calendar } from "react-native-calendars";
+import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/context/ThemeContext";
-import { Bell, Moon, Sun, Search } from "lucide-react-native";
-import React, { useRef , useState} from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TextInput,
-  SafeAreaView,
-  Animated,
-  Dimensions,
-  StatusBar,
-} from "react-native";
-const BANNER_HEIGHT = 220; // Max height of banner
-const HEADER_HEIGHT = 100; // Minimum height when collapsed
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const HomeScreen: React.FC = () => {
-  const { colors, isDark, toggleTheme } = useTheme();
-  const scrollY = useRef(new Animated.Value(0)).current;
-  
-  // Calculate animated values
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [BANNER_HEIGHT, HEADER_HEIGHT],
-    extrapolate: 'clamp'
-  });
-  
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT, BANNER_HEIGHT],
-    outputRange: [1, 0.8, 0],
-    extrapolate: 'clamp'
-  });
-  
-  const titleScale = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [1, 0.8],
-    extrapolate: 'clamp'
-  });
-  
-  const titleTranslateY = scrollY.interpolate({
-    inputRange: [0, BANNER_HEIGHT - HEADER_HEIGHT],
-    outputRange: [0, -10],
-    extrapolate: 'clamp'
-  });
+import { Bell } from "lucide-react-native";
 
+const ReportsScreen = () => {
+  const { colors, toggleTheme, isDark } = useTheme();
+  const [selected, setSelected] = useState("2025-08-17");
+  const today = new Date().toISOString().split("T")[0];
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
-
-      {/* Collapsible Header */}
-      <Animated.View style={[styles.header, { height: headerHeight }]}>
-        <Animated.Image
-          source={require("@/assets/images/home_banner.jpg")}
-          style={[styles.bannerImage, { opacity: headerOpacity }]}
-          resizeMode="cover"
-        />
-        <View style={styles.headerOverlay}>
-          <View style={styles.headerTopContent}>
-            <Animated.Text
-              style={[
-                styles.welcomeText,
-                {
-                  transform: [
-                    { scale: titleScale },
-                    { translateY: titleTranslateY },
-                  ],
-                },
-              ]}
-            >
-              Hello, Username
-            </Animated.Text>
-            <View style={styles.headerButtons}>
-              <TouchableOpacity style={styles.iconButton}>
-                <Bell size={24} color="#fff" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
+    <View style={styles.container}>
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={styles.iconButton}>
+            <Bell size={24} color={colors.headerBg} />
+          </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
                 {isDark ? (
                   <Sun size={24} color="#fff" />
                 ) : (
                   <Moon size={24} color="#fff" />
                 )}
-              </TouchableOpacity>
-            </View>
-          </View>
+              </TouchableOpacity> */}
         </View>
-      </Animated.View>
+      </View>
+    
 
-      {/* Main Content */}
-      <Animated.ScrollView
-        style={[styles.container, { backgroundColor: colors.background }]}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false }
-        )}
-        contentContainerStyle={{ paddingTop: 16 }}
-      >
-        {/* Search bar */}
-        {/* <View style={styles.searchContainer}>
-          <Search size={20} color="#666" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search camp site..."
-            placeholderTextColor="#666"
-          />
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterButtonText}>Filters</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* Recommendation */}
-        <RecommendationCard />
-
-        {/* Popular */}
-        <View style={styles.popularSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Popular</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>See all</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Popular items would go here */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.popularScrollView}
-          >
-            <View style={styles.popularCard}>
-              <Image
-                source={require("@/assets/images/home_banner.jpg")}
-                style={styles.popularImage}
-                resizeMode="cover"
-              />
-              <View style={styles.popularCardContent}>
-                <Text style={styles.popularTitle}>Mountain View Camp</Text>
-                <Text style={styles.popularLocation}>Colorado Springs</Text>
-                <View style={styles.popularRating}>
-                  <Text style={styles.ratingText}>4.8 ⭐</Text>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.popularCard}>
-              <Image
-                source={require("@/assets/images/home_banner.jpg")}
-                style={styles.popularImage}
-                resizeMode="cover"
-              />
-              <View style={styles.popularCardContent}>
-                <Text style={styles.popularTitle}>Lakeside Camp</Text>
-                <Text style={styles.popularLocation}>Lake Tahoe</Text>
-                <View style={styles.popularRating}>
-                  <Text style={styles.ratingText}>4.7 ⭐</Text>
-                </View>
-              </View>
-            </View>
-          </ScrollView>
+      
+      <View style={styles.calendarContainer}>
+        <Text style={styles.question}>How did you feel that day</Text>
+        <View style={styles.dateRow}>
+          <Text style={styles.dateText}>{today}</Text>
+          {/* <Ionicons name="create-outline" size={20} color="#4A784E" style={{ marginLeft: 6 }} /> */}
         </View>
 
-        {/* Recommended */}
-        <View style={styles.recommendedSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recommended</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>See all</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Calendar */}
+        <Calendar
+          onDayPress={(day) => setSelected(day.dateString)}
+          markedDates={{
+            [selected || today]: {
+              selected: true,
+              selectedColor: "#F4B393",
+            },
+          }}
+          theme={{
+            backgroundColor: "#D3E6BD",
+            calendarBackground: "#D3E6BD",
+            textSectionTitleColor: "#4A784E",
+            selectedDayBackgroundColor: "#F4B393",
+            selectedDayTextColor: "#fff",
+            todayTextColor: "#4A784E",
+            dayTextColor: "#4A784E",
+            textDisabledColor: "#ccc",
+            monthTextColor: "#4A784E",
+            arrowColor: "#4A784E",
+          }}
+          style={styles.calendar}
+        />
+      </View>
+      {/* Report button */}
+      <TouchableOpacity style={styles.reportBtn}>
+        <Text style={styles.reportText}>Report</Text>
+      </TouchableOpacity>
 
-          <View style={styles.recommendedCard}>
-            <Image
-              source={require("@/assets/images/home_banner.jpg")}
-              style={styles.recommendedImage}
-              resizeMode="cover"
-            />
-            <View style={styles.recommendedCardContent}>
-              <Text style={styles.recommendedTitle}>Forest Retreat</Text>
-              <Text style={styles.recommendedLocation}>Portland, Oregon</Text>
-              <View style={styles.recommendedFooter}>
-                <Text style={styles.ratingText}>4.9 ⭐</Text>
-                <Text style={styles.priceText}>$45/night</Text>
-              </View>
-            </View>
-          </View>
+      {/* Graph placeholder */}
+      <View style={styles.graphContainer}>
+        {[...Array(5)].map((_, i) => (
+          <View key={i} style={styles.bar} />
+        ))}
+      </View>
 
-          <View style={styles.recommendedCard}>
-            <Image
-              source={require("@/assets/images/home_banner.jpg")}
-              style={styles.recommendedImage}
-              resizeMode="cover"
-            />
-            <View style={styles.recommendedCardContent}>
-              <Text style={styles.recommendedTitle}>River Camp</Text>
-              <Text style={styles.recommendedLocation}>Montana</Text>
-              <View style={styles.recommendedFooter}>
-                <Text style={styles.ratingText}>4.6 ⭐</Text>
-                <Text style={styles.priceText}>$38/night</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Extra padding at bottom for better scrolling experience */}
-        <View style={{ height: 50 }} />
-      </Animated.ScrollView>
-    </SafeAreaView>
+      {/* Bottom tab */}
+      {/* <View style={styles.bottomNav}>
+        <Ionicons name="home-outline" size={24} color="#60836C" />
+        <Ionicons name="infinite-outline" size={24} color="#60836C" />
+        <Ionicons name="heart-outline" size={24} color="#60836C" />
+        <Ionicons name="calendar" size={24} color="#60836C" />
+        <Ionicons name="person-outline" size={24} color="#60836C" />
+      </View> */}
+    </View>
   );
 };
 
+export default ReportsScreen;
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#F9FAF5",
-  },
   container: {
     flex: 1,
-    backgroundColor: "#F9FAF5",
+    backgroundColor: "#FDF6E7",
     paddingHorizontal: 16,
+    paddingTop: 20,
   },
   header: {
     position: "relative",
     width: "100%",
-    overflow: "hidden",
-  },
-  bannerImage: {
-    position: "absolute",
-    top: 0,
+    // height: 80,
     left: 0,
     right: 0,
     bottom: 0,
-    width: SCREEN_WIDTH,
-  },
-  headerOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.3)",
-    paddingHorizontal: 16,
-    paddingTop: StatusBar.currentHeight + 10,
-    justifyContent: "space-between",
-  },
-  headerTopContent: {
+    paddingHorizontal: 10,
+    // justifyContent: "space-between",
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-  },
-  welcomeText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#fff",
-    textShadowColor: "rgba(0,0,0,0.3)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    justifyContent: "flex-end",
+    paddingVertical: 20,
   },
   headerButtons: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  bellIcon: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+  },
+ calendarContainer:{
+  backgroundColor: "#D3E6BD",
+  borderRadius: 16,
+  padding: 16,
+ },
+  question: {
+    backgroundColor: "#FDF6E7",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 10,
+    fontSize: 15,
+    width: "50%",
+    alignContent: "center",
+    textAlign: "center",
+    color: "#8B4218",
+    fontWeight: "600",
+    justifyContent: "flex-start"
   },
   iconButton: {
     padding: 8,
     marginLeft: 8,
   },
-  searchContainer: {
+  dateRow: {
     flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#fff",
+  },
+  dateText: {
+    fontSize: 32,
+    marginLeft: 6,
+    fontWeight: "600",
+    color: "#4A784E",
+  },
+  calendar: {
+    borderRadius: 16,
+    overflow: "hidden",
+    marginBottom: 10,
+  },
+  reportBtn: {
+    backgroundColor: "#FDF6E7",
+    alignSelf: "flex-end",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    marginBottom: 10,
   },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-  },
-  filterButton: {
-    backgroundColor: "#E8F0E3",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  filterButtonText: {
-    color: "#4CAF50",
+  reportText: {
+    color: "#B04A1E",
     fontWeight: "600",
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#333",
-  },
-  categoriesContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 24,
-  },
-  categoryItem: {
-    alignItems: "center",
-  },
-  categoryIconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "#E8F0E3",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  categoryIcon: {
-    fontSize: 24,
-  },
-  categoryName: {
-    fontSize: 14,
-    color: "#333",
-  },
-  popularSection: {
-    marginBottom: 24,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  seeAllText: {
-    color: "#4CAF50",
-    fontWeight: "600",
-  },
-  popularScrollView: {
-    marginLeft: -8,
-  },
-  popularCard: {
-    width: 250,
-    backgroundColor: "#fff",
+  graphContainer: {
+    backgroundColor: "#D3E6BD",
     borderRadius: 16,
-    overflow: "hidden",
-    marginRight: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  popularImage: {
-    width: "100%",
-    height: 150,
-  },
-  popularCardContent: {
-    padding: 12,
-  },
-  popularTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  popularLocation: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 6,
-  },
-  popularRating: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  ratingText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#FF8C00",
-  },
-  recommendedSection: {
-    marginBottom: 24,
-  },
-  recommendedCard: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    overflow: "hidden",
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  recommendedImage: {
-    width: "100%",
-    height: 180,
-  },
-  recommendedCardContent: {
     padding: 16,
-  },
-  recommendedTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  recommendedLocation: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  recommendedFooter: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "space-around",
+    marginBottom: 12,
   },
-  priceText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#4CAF50",
+  bar: {
+    width: 20,
+    height: 80,
+    backgroundColor: "#FDF6E7",
+    borderRadius: 10,
+  },
+  bottomNav: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    backgroundColor: "#E7F0D7",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
-
-export default HomeScreen;

@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 
-export default function TherapyLayout() {
+export default function Layout() {
 
   const [font] = useFonts({
     "Montserrat-Bold": require("../../assets/fonts/Montserrat-Bold.ttf"),
@@ -10,9 +10,9 @@ export default function TherapyLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="experts" />
-      <Stack.Screen name="focus" />
-      <Stack.Screen name="therapy" />
+      <Stack.Screen options={{ headerShown: false }} name="experts" />
+      <Stack.Screen options={{ headerShown: false }} name="focus" />
+      <Stack.Screen options={{ headerShown: false }} name="therapy" />
     </Stack>
   );
 }

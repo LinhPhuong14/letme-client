@@ -21,7 +21,8 @@ import { useFonts } from "expo-font";
 const HomeScreen: React.FC = () => {
   const { colors, isDark, toggleTheme } = useTheme();
   const scrollY = useRef(new Animated.Value(0)).current;
-
+  const now = new Date();
+  const hours = now.getHours();
 
   const [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("../../assets/fonts/Montserrat-Bold.ttf"),
@@ -30,34 +31,45 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-      
-        <Image
-          source={{
-            uri: "https://i.pinimg.com/736x/62/35/32/623532b7e41afa49e81c90e77e94f5e9.jpg",
-          }}
-          style={styles.bannerImage}
-          resizeMode="contain"
-        />
-        <View style={styles.headerTopContent}>
-          <View style={styles.headerButtons}>
-            <TouchableOpacity style={styles.iconButton}>
-              <Bell size={24} color="#fff" />
-            </TouchableOpacity>
-          </View>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
+      <Image
+        source={hours < 17 ?{
+          uri: "https://i.pinimg.com/736x/62/35/32/623532b7e41afa49e81c90e77e94f5e9.jpg",
+        }:{
+          uri: "https://i.pinimg.com/474x/71/a4/c3/71a4c3b313d5e7882e5d7c650808fe99.jpg"
+        }}
+        style={styles.bannerImage}
+        resizeMode="cover"
+      />
+      <View style={styles.headerTopContent}>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={styles.iconButton}>
+            <Bell size={24} color="#fff" />
+          </TouchableOpacity>
         </View>
-        <View style={styles.headerContent}>
-          <Text style={styles.welcomeText}>Hello, Username</Text>
-          <View style={styles.rightHeader}>
-            <Image
-              source={require("@/assets/images/sun.png")}
-              style={
-                styles.sunImage
-              }
-            />
-          </View>
+      </View>
+      <View style={styles.headerContent}>
+        <Text style={styles.welcomeText}>
+          {hours < 17
+            ? hours < 12
+              ? "Good Morning"
+              : "Good Afternoon"
+            : "Good Evening"}
+          , username
+        </Text>
+
+        <View style={styles.rightHeader}>
+          <Image
+            source={hours <17 ? require("@/assets/images/sun.png"): require("@/assets/images/moon.png")}
+            style={styles.sunImage}
+          />
         </View>
-      
+      </View>
 
       {/* Scrollable Content */}
       <Animated.ScrollView
@@ -101,6 +113,7 @@ const styles = StyleSheet.create({
   bannerImage: {
     position: "absolute",
     top: 0,
+    height: 300,
     left: 0,
     right: 0,
     bottom: 0,
@@ -122,8 +135,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   headerContent: {
-    flexDirection: "row",
-    alignItems: "center",
+  
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingTop: 10,
@@ -140,6 +152,7 @@ const styles = StyleSheet.create({
   },
   rightHeader: {
     flexDirection: "row",
+    justifyContent: "flex-end",
     alignItems: "center",
     gap: 8,
   },
